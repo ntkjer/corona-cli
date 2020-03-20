@@ -31,13 +31,17 @@ const API_ALL_COUNTRIES_ENDPOINT = BASE_API + "/countries"
 // summaryCmd represents the summary command
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Summarizes COVID-19 stats.",
+	Long: `Usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+summary --country/-c US 
+summary --country/-c China
+
+Leaving summary without a country code flag entered will return a summary of all countries. 
+
+To Plot:
+
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		country, _ := cmd.Flags().GetString("country")
 		curlCmd := "curl -s "
@@ -48,17 +52,18 @@ to quickly create a Cobra application.`,
 			//resp := initRequest(API_TOTAL_ENDPOINT)
 			//body, err := ioutil.ReadAll(resp.Body)
 			//filter := `jq -c '.[]' `
-			cmd := curlCmd + API_ALL_COUNTRIES_ENDPOINT + ` | jq -c '.[]' | column -t -s'[],' `
+			cmd := curlCmd + API_ALL_COUNTRIES_ENDPOINT + ` | jq -s .`
 			out, err := exec.Command("bash", "-c", cmd).Output()
 			errorHandler(err)
 			fmt.Println(string(out))
 		} else if country != "" {
-			cmd := curlCmd + API_ALL_COUNTRIES_ENDPOINT + "/" + country
+			cmd := curlCmd + API_ALL_COUNTRIES_ENDPOINT + "/" + country + " | jq -s ."
 			out, err := exec.Command("bash", "-c", cmd).Output()
 			errorHandler(err)
 			res := string(out)
 			fmt.Println(res)
 		}
+
 	},
 }
 
@@ -79,6 +84,7 @@ func initRequest(url string) *http.Response {
 func init() {
 	rootCmd.AddCommand(summaryCmd)
 	summaryCmd.Flags().StringP("country", "c", "", "Choose country, default=all")
+	summaryCmd.Flags().StringP("flag", "f", "", "Flag ")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
