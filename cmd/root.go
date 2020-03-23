@@ -30,13 +30,18 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "corona-cli",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "A CLI For playing with corona statistics. ",
+	Long: `Available commands:
+	For further information, invoke the command with the corona-cli $SUBCOMMAND --help flag
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	corona-cli summary --country/-c $country-name
+		OR 
+	corona-cli summary ----> falls back to all countries by default.
+		
+		Views all or country specific COVID-19 stats. 
+		Entering summary without a specified country returns all summaries globally.
+	
+	`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
